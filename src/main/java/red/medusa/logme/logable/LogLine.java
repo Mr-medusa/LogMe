@@ -26,7 +26,7 @@ public class LogLine implements Logable {
             this.parentSubject.getLogLines().add(this);
             subject = new Subject(name.length == 1 ? name[0] : parentSubject.getName() + "-" + Subject.NamingGenerator.generator());
         }
-        LogContext.set(this);
+        LogContext.setLogLine(this);
         return subject;
     }
 
@@ -35,5 +35,13 @@ public class LogLine implements Logable {
      */
     public Subject getSubject() {
         return subject;
+    }
+
+    public Subject getParentSubject() {
+        return parentSubject;
+    }
+
+    public void setParentSubject(Subject parentSubject) {
+        this.parentSubject = parentSubject;
     }
 }

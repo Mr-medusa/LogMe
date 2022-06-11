@@ -21,6 +21,7 @@ public class LogMe extends SubjectFactory {
     public LogMe(Subject root) {
         super();
         this.root = root;
+        LogContext.setLogMe(this);
     }
 
     public synchronized LogLine i(Subject subject, String msg, boolean... params) {
@@ -37,11 +38,13 @@ public class LogMe extends SubjectFactory {
             throw new IllegalArgumentException("Subject 已经存在: " + subject.getName());
         }
         subject.addLog(o);
+
+        LogContext.setSubject(subject);
         return new LogLine(subject);
     }
 
     public synchronized LogLine childI(String msg, boolean... params) {
-        return i(LogContext.subject(), msg, 2, params);
+        return i(LogContext.getLogLine().getSubject(), msg, 2, params);
     }
 
     public void print() {
@@ -112,6 +115,7 @@ public class LogMe extends SubjectFactory {
     public Subject getRoot() {
         return root;
     }
+
 
     /*
      *  color

@@ -36,8 +36,9 @@ public class Subject {
         return color;
     }
 
-    public Subject mount(Subject subject,LogMe logMe) {
+    public Subject mount(Subject subject) {
         // 如果存在于 root 的子节点中则移除
+        LogMe logMe = LogContext.getLogMe();
         logMe.getRoot().getChildren().remove(this);
         subject.children.add(this);
         return this;

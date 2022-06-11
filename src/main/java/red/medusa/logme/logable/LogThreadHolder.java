@@ -7,8 +7,8 @@ import java.util.function.Function;
  * @date 2022/6/10
  */
 public class LogThreadHolder implements Logable {
-    private static int counter = 0;
-    public final int id = counter++;
+    private static final ThreadLocal<Integer> counter = ThreadLocal.withInitial(()-> 0);
+    public final int id;
     private final Object log;
     private final Thread thread;
     private Function<LogThreadHolder,Object> withOrderFunction;
@@ -16,11 +16,15 @@ public class LogThreadHolder implements Logable {
     public LogThreadHolder(Object log, Thread thread) {
         this.log = log;
         this.thread = thread;
+        counter.set(counter.get()+1);
+        this.id =counter.get();
     }
     public LogThreadHolder(Object log, Thread thread,Function<LogThreadHolder,Object> withOrderFunction) {
         this.log = log;
         this.thread = thread;
         this.withOrderFunction = withOrderFunction;
+        counter.set(counter.get()+1);
+        this.id =counter.get();
     }
     @Override
     public String toString() {
