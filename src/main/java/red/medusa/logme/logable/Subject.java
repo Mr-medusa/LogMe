@@ -11,6 +11,7 @@ import java.util.*;
  * @date 2022/6/9
  */
 public class Subject {
+    private LogMe logMe;
     private final String name;
     private final String date;
     private final ConsoleStr.RGB color = Configuration.MSG_COLOR != null ? Configuration.MSG_COLOR : LogMe.randomColor();
@@ -20,8 +21,7 @@ public class Subject {
     private final Thread thread = Thread.currentThread();
 
     public Subject(String name) {
-        this.name = name;
-        this.date = null;
+        this(name,null);
     }
     public Subject(String name, String date) {
         this.name = name;
@@ -38,8 +38,7 @@ public class Subject {
 
     public Subject mount(Subject subject) {
         // 如果存在于 root 的子节点中则移除
-        LogMe logMe = LogContext.getLogMe();
-        logMe.getRoot().getChildren().remove(this);
+        this.logMe.getRoot().getChildren().remove(this);
         subject.children.add(this);
         return this;
     }
@@ -80,6 +79,10 @@ public class Subject {
         return name;
     }
 
+    public void setLogMe(LogMe logMe) {
+        this.logMe = logMe;
+    }
+
     public static class NamingGenerator {
         public static int counter = 0;
 
@@ -87,6 +90,4 @@ public class Subject {
             return counter++;
         }
     }
-
-
 }

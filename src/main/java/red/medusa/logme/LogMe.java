@@ -30,7 +30,7 @@ public class LogMe extends SubjectFactory {
 
     public synchronized LogLine i(Subject subject, String msg, int deep, boolean... params) {
         if (this.getClose() != null && this.getClose()) {
-            return new LogLine(null);
+            return new LogLine(null,null);
         }
         LogThreadHolder o = create(subject, msg, new Throwable().getStackTrace(), deep, params);
 
@@ -38,9 +38,7 @@ public class LogMe extends SubjectFactory {
             throw new IllegalArgumentException("Subject 已经存在: " + subject.getName());
         }
         subject.addLog(o);
-
-        LogContext.setSubject(subject);
-        return new LogLine(subject);
+        return new LogLine(subject,this);
     }
 
     public synchronized LogLine childI(String msg, boolean... params) {
@@ -68,6 +66,7 @@ public class LogMe extends SubjectFactory {
             return;
         }
         if (subject == null) {
+            this.logFormat.printSubjectLog(root,0,thread);
             for (Subject child : root.getChildren()) {
                 printSubject(child, 0, thread);
             }
@@ -104,7 +103,6 @@ public class LogMe extends SubjectFactory {
                 printSubject(child, indent, thread);
             }
         }
-
     }
 
     private LogThreadHolder create(Subject subject, String msg, StackTraceElement[] stackTrace, int deep, boolean... params) {
@@ -116,6 +114,9 @@ public class LogMe extends SubjectFactory {
         return root;
     }
 
+    public void setChild(LogMe child) {
+        this.root.getChildren().add(child.root);
+    }
 
     /*
      *  color
@@ -414,9 +415,6 @@ public class LogMe extends SubjectFactory {
         colors.add(new ConsoleStr.RGB(205, 198, 115, "Khaki3"));
         colors.add(new ConsoleStr.RGB(139, 134, 78, "Khaki4"));
         colors.add(new ConsoleStr.RGB(255, 236, 139, "LightGoldenrod1"));
-        colors.add(new ConsoleStr.RGB(238, 220, 130, "LightGoldenrod2"));
-        colors.add(new ConsoleStr.RGB(205, 190, 112, "LightGoldenrod3"));
-        colors.add(new ConsoleStr.RGB(139, 129, 76, "LightGoldenrod4"));
         colors.add(new ConsoleStr.RGB(255, 255, 224, "LightYellow1"));
         colors.add(new ConsoleStr.RGB(238, 238, 209, "LightYellow2"));
         colors.add(new ConsoleStr.RGB(205, 205, 180, "LightYellow3"));
@@ -482,9 +480,6 @@ public class LogMe extends SubjectFactory {
         colors.add(new ConsoleStr.RGB(205, 129, 98, "LightSalmon3"));
         colors.add(new ConsoleStr.RGB(139, 87, 66, "LightSalmon4"));
         colors.add(new ConsoleStr.RGB(255, 165, 0, "Orange1"));
-        colors.add(new ConsoleStr.RGB(238, 154, 0, "Orange2"));
-        colors.add(new ConsoleStr.RGB(205, 133, 0, "Orange3"));
-        colors.add(new ConsoleStr.RGB(139, 90, 0, "Orange4"));
         colors.add(new ConsoleStr.RGB(255, 127, 0, "DarkOrange1"));
         colors.add(new ConsoleStr.RGB(238, 118, 0, "DarkOrange2"));
         colors.add(new ConsoleStr.RGB(205, 102, 0, "DarkOrange3"));
@@ -518,8 +513,6 @@ public class LogMe extends SubjectFactory {
         colors.add(new ConsoleStr.RGB(205, 145, 158, "Pink3"));
         colors.add(new ConsoleStr.RGB(139, 99, 108, "Pink4"));
         colors.add(new ConsoleStr.RGB(255, 174, 185, "LightPink1"));
-        colors.add(new ConsoleStr.RGB(238, 162, 173, "LightPink2"));
-        colors.add(new ConsoleStr.RGB(205, 140, 149, "LightPink3"));
         colors.add(new ConsoleStr.RGB(139, 95, 101, "LightPink4"));
         colors.add(new ConsoleStr.RGB(255, 130, 171, "PaleVioletRed1"));
         colors.add(new ConsoleStr.RGB(238, 121, 159, "PaleVioletRed2"));
@@ -541,13 +534,7 @@ public class LogMe extends SubjectFactory {
         colors.add(new ConsoleStr.RGB(238, 174, 238, "Plum2"));
         colors.add(new ConsoleStr.RGB(205, 150, 205, "Plum3"));
         colors.add(new ConsoleStr.RGB(139, 102, 139, "Plum4"));
-        colors.add(new ConsoleStr.RGB(224, 102, 255, "MediumOrchid1"));
-        colors.add(new ConsoleStr.RGB(209, 95, 238, "MediumOrchid2"));
-        colors.add(new ConsoleStr.RGB(180, 82, 205, "MediumOrchid3"));
-        colors.add(new ConsoleStr.RGB(122, 55, 139, "MediumOrchid4"));
         colors.add(new ConsoleStr.RGB(191, 62, 255, "DarkOrchid1"));
-        colors.add(new ConsoleStr.RGB(178, 58, 238, "DarkOrchid2"));
-        colors.add(new ConsoleStr.RGB(154, 50, 205, "DarkOrchid3"));
         colors.add(new ConsoleStr.RGB(104, 34, 139, "DarkOrchid4"));
         colors.add(new ConsoleStr.RGB(155, 48, 255, "Purple1"));
         colors.add(new ConsoleStr.RGB(145, 44, 238, "Purple2"));
@@ -575,6 +562,7 @@ public class LogMe extends SubjectFactory {
         }
         this.logFormat = logFormat;
     }
+
 
 
 }

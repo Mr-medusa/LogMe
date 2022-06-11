@@ -13,7 +13,7 @@ public class ConsoleStr {
 	/**
 	 * 控制 another 的文本是否使用当前样式，默认情况下为 false
 	 */
-	private boolean transitivity = false;
+	private boolean transitivity = true;
 	/**
 	 * 设置每次调用样式方法之后是否总是返回新的实例，默认情况下为 false
 	 */

@@ -1,12 +1,9 @@
 package red.medusa.logme;
 
 import red.medusa.logme.logable.LogContext;
-import red.medusa.logme.logable.LogLine;
 import red.medusa.logme.logable.Subject;
 
 import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * @author Mr.Medusa
@@ -22,8 +19,10 @@ public class LogMeTest {
         Subject fibonacci3 = logMe.newSubject("Fibonacci3");
         logMe.i(fibonacci1,"1");
         logMe.i(fibonacci1,"2");
+
         logMe.i(fibonacci2,"3");
         logMe.i(fibonacci2,"4");
+
         logMe.i(fibonacci3,"5");
         logMe.i(fibonacci3,"6");
 
@@ -44,9 +43,9 @@ public class LogMeTest {
         Arrays.stream(threads).forEach(Thread::start);
         Thread.sleep(30);
 
-        logMe.print();
+//        logMe.setChild(logMe2);
+//        logMe.print();
         logMe2.print();
-
     }
 
     public static long fibonacci(long number) {
@@ -61,8 +60,7 @@ public class LogMeTest {
     }
 
     public static void hellot() {
-        logMe2.i(LogContext.getSubject(), "Hellot");
-        logMe2.i(LogContext.getSubject(), "Hellot");
+        logMe2.i(LogContext.getLogLine().getSubject(), "Hellot");
     }
 
 }

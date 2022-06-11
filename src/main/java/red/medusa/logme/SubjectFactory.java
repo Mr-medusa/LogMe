@@ -38,6 +38,7 @@ public abstract class SubjectFactory extends Configuration{
         }
         Subject subject = new Subject(name.toString(), date);
         this.logMe.getRoot().getChildren().add(subject);
+        subject.setLogMe(this.logMe);
         return subject;
     }
 

@@ -1,5 +1,6 @@
 package red.medusa.logme.format;
 
+import red.medusa.logme.LogMe;
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.color.Emoji;
 import red.medusa.logme.logable.LogThreadHolder;
@@ -10,25 +11,26 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
  * @author Mr.Medusa
  * @date 2022/6/11
  */
-public class DefaultLogFormat implements LogFormat {
+public class PrettyLogFormat implements LogFormat {
     public static ConsoleStr.RGB CYAN = new ConsoleStr.RGB(0, 135, 135);
-    private PrintStream printStream;
-
+    public Map<Integer, ConsoleStr.RGB> intentToColor = new HashMap<>();
+    private final PrintStream printStream;
+    private static final String INTENT = "    ";
+    private final String idPrefix = "";
     /**
      * 处理附加的序号
      */
-    private final Function<LogThreadHolder, Object> withOrderFunction = new Function<LogThreadHolder, Object>() {
-        @Override
-        public Object apply(LogThreadHolder logThreadHolder) {
-            return new ConsoleStr(logThreadHolder.id + "> ").color(CYAN).toString() + logThreadHolder.getLog();
-        }
-    };
+    private final Function<LogThreadHolder, Object> withOrderFunction = logThreadHolder ->
+            new ConsoleStr(idPrefix + logThreadHolder.id + "> ").color(CYAN).toString() +
+                    logThreadHolder.getLog();
 
     /**
      * 格式化日志
@@ -77,10 +79,13 @@ public class DefaultLogFormat implements LogFormat {
     @Override
     public void printSubjectLog(Subject subject, int intent, Thread thread) {
         if (thread == null || subject.getThread() == thread) {
-            ConsoleStr str = new ConsoleStr("           (" + subject.getColor() + ")     < " + subject + " >           ").color(CYAN);
-            printStream.println(new ConsoleStr().append(String.join("",
-                    Collections.nCopies(intent, "   "))).toString()
-                    + str.italics().framed());
+            ConsoleStr str = new ConsoleStr("           (" + subject.getColor() + ")" +
+                    "     < " + subject + " >           ").color(CYAN);
+            printStream.println(
+                    new ConsoleStr().color(CYAN)
+                            .append(nCopies(intent, "----",  "--->")).toString()
+                            + idPrefix
+                            + str.italics().framed());
         }
     }
 
@@ -92,19 +97,41 @@ public class DefaultLogFormat implements LogFormat {
      */
     @Override
     public void printSubject(int intent, Logable logable) {
-        printStream.println(new ConsoleStr().append(String.join("",
-                Collections.nCopies(intent, "   "))).toString()+
-                new ConsoleStr("\\  ").color(CYAN) + logable);
+        printStream.println(new ConsoleStr().color(CYAN)
+                .append(
+                        nCopies(intent, "|   ",null) // 子节点对齐线
+                ).toString() +
+                logable);
     }
 
     @Override
     public void stackOver(int indent) {
-        printStream.println(String.join("", Collections.nCopies(indent, "	")) +
+        printStream.println(String.join("", Collections.nCopies(indent, INTENT)) +
                 new ConsoleStr("......").color(CYAN));
     }
 
-    public DefaultLogFormat(PrintStream printStream) {
+    public PrettyLogFormat(PrintStream printStream) {
         this.printStream = printStream;
+    }
+
+    private ConsoleStr.RGB getColorByIntent(int i) {
+        return intentToColor.computeIfAbsent(i, it -> LogMe.randomColor());
+    }
+
+    private String nCopies(int intent, String str, String lastHandle) {
+        if (intent == 0) {
+            // 处理不缩进的 Subject
+            return new ConsoleStr("|").color(getColorByIntent(1)).toString();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= intent; i++) {
+            String strToUse = str;
+            if (lastHandle != null && i == intent ) {
+                strToUse = lastHandle;
+            }
+            sb.append(new ConsoleStr(strToUse).color(getColorByIntent(i)));
+        }
+        return sb.toString();
     }
 }
 

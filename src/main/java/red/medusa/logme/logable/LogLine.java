@@ -1,5 +1,7 @@
 package red.medusa.logme.logable;
 
+import red.medusa.logme.LogMe;
+
 /**
  * LogLine 主要用来封装其中某一行日志，但是这行日志可能想要依赖另一组子日志
  *
@@ -9,11 +11,13 @@ package red.medusa.logme.logable;
 public class LogLine implements Logable {
     private Subject parentSubject;
     private Subject subject;
+    private final LogMe logMe;
 
-    public LogLine(Subject subject) {
+    public LogLine(Subject subject,LogMe logMe) {
         if (subject != null) {
             this.parentSubject = subject;
         }
+        this.logMe = logMe;
     }
 
     /**
@@ -26,6 +30,7 @@ public class LogLine implements Logable {
             this.parentSubject.getLogLines().add(this);
             subject = new Subject(name.length == 1 ? name[0] : parentSubject.getName() + "-" + Subject.NamingGenerator.generator());
         }
+        this.subject.setLogMe(this.logMe);
         LogContext.setLogLine(this);
         return subject;
     }

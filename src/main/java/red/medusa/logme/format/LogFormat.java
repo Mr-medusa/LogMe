@@ -10,7 +10,7 @@ import red.medusa.logme.logable.Subject;
  */
 public interface LogFormat {
 
-    LogFormat DEFAULT_LOG_FORMAT = new DefaultLogFormat(DefaultLogFormat.CYAN, System.out);
+    LogFormat DEFAULT_LOG_FORMAT = new PrettyLogFormat( System.out);
 
     LogThreadHolder format(String trace, Subject subject, boolean[] params, String msg);
 
