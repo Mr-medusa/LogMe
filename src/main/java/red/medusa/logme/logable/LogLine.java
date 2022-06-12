@@ -12,6 +12,7 @@ public class LogLine implements Logable {
     private Subject parentSubject;
     private Subject subject;
     private final LogMe logMe;
+    private Object param;
 
     public LogLine(Subject subject,LogMe logMe) {
         if (subject != null) {
@@ -34,6 +35,17 @@ public class LogLine implements Logable {
         LogContext.setLogLine(this);
         return subject;
     }
+    public synchronized Subject prepareParameterChildren(Object param,String... name) {
+        if (this.parentSubject != null) {
+            this.parentSubject.getLogLines().add(this);
+            this.subject = new Subject(name.length == 1 ? name[0] : parentSubject.getName() + "-" + Subject.NamingGenerator.generator());
+        }
+        this.subject.setLogMe(this.logMe);
+        this.param = param;
+        if(LogContext.getParameterLogLine(param)==null)
+            LogContext.setParameterLogLine(param,this);
+        return subject;
+    }
 
     /**
      * LogLine 也可能会存在 Subject
@@ -48,5 +60,13 @@ public class LogLine implements Logable {
 
     public void setParentSubject(Subject parentSubject) {
         this.parentSubject = parentSubject;
+    }
+
+    public Object getParam() {
+        return param;
+    }
+
+    public void setParam(Object param) {
+        this.param = param;
     }
 }

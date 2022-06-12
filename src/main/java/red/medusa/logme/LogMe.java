@@ -45,6 +45,10 @@ public class LogMe extends SubjectFactory {
         return i(LogContext.getLogLine().getSubject(), msg, 2, params);
     }
 
+    public synchronized LogLine childParameterI(Object key,String msg, boolean... params) {
+        return i(LogContext.getParameterLogLine(key).getSubject(), msg, 2, params);
+    }
+
     public void print() {
         doPrint(null, null);
     }
