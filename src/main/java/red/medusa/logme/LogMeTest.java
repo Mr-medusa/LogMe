@@ -45,7 +45,7 @@ public class LogMeTest {
 
        logMe.setChild(logMe2);
        logMe.print();
-        // logMe2.print();
+        logMe2.print();
     }
 
     public static long fibonacci(long number) {

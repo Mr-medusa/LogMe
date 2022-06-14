@@ -1,5 +1,6 @@
 package red.medusa.logme;
 
+import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.format.PlainLogFormat;
 import red.medusa.logme.logable.Subject;
 import red.medusa.logme.logable.message.ParamMsg;
@@ -10,7 +11,7 @@ import red.medusa.logme.logable.message.ParamMsg;
  */
 public class TraceTest {
     static LogMe logMe = SubjectFactory.getLogMe(LogMeTest.class);
-
+    static LogMe hello = LogMe.getLogMe("Hello");
     public static void main(String[] args) {
         logMe.setLogFormat(new PlainLogFormat(System.out));
         Subject fibonacciSubject = logMe.newSubject("Fibonacci");
@@ -22,7 +23,7 @@ public class TraceTest {
         logMe.print();
 
         System.out.println("");
-        LogMe hello = LogMe.getLogMe("Hello");
+
         hello.setLogFormat(new PlainLogFormat(System.out));
         Subject fibonacciSubject2 = hello.newSubject("Fibonacci2");
         hello.i(fibonacciSubject2, "one").prepareChildren();
@@ -37,6 +38,7 @@ public class TraceTest {
             return number;
         } else {
             logMe.childParameterI(new ParamMsg(number, "number is "+ number,true)
+                    .highlight(ConsoleStr::reverse)
                     .append(number - 1, ", number - 1 is " + (number - 1),false)
                     .append(number - 2, ", number - 2 is " + (number - 2),false)
             ).prepareParameterChildren(number);
@@ -48,10 +50,10 @@ public class TraceTest {
 
     public static long fibonacci2(long number) {
         if ((number == 0) || (number == 1)) {
-            logMe.childI("final number is " + number);
+            hello.childI("final number is " + number);
             return number;
         } else {
-            logMe.childI("number is " + number + "," + " number - 1 is " + (number - 1) + "," + "number - 2 is " + (number - 2)).prepareChildren();
+            hello.childI("number is " + number + "," + " number - 1 is " + (number - 1) + "," + "number - 2 is " + (number - 2)).prepareChildren();
             return fibonacci2(number - 1) + fibonacci2(number - 2);
         }
     }

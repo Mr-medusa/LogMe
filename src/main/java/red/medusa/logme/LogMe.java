@@ -15,6 +15,7 @@ import java.util.Random;
  * @date 2022/6/6
  */
 public class LogMe extends SubjectFactory {
+    private int subjectId = 1;
     private LogFormat logFormat = LogFormat.DEFAULT_LOG_FORMAT;
     private final LinkedList<ConsoleStr> allLines = new LinkedList<>();
     private final Subject root;
@@ -144,7 +145,7 @@ public class LogMe extends SubjectFactory {
 
     private LogThreadHolder create(Subject subject, Object msg, StackTraceElement[] stackTrace, int deep, boolean... params) {
         String trace = stackTrace[deep].toString();
-        return this.logFormat.format(trace, subject, params, msg);
+        return this.logFormat.format(trace, subject, params, msg,this);
     }
 
     public Subject getRoot() {
@@ -600,7 +601,9 @@ public class LogMe extends SubjectFactory {
         this.logFormat = logFormat;
     }
 
-
+    public int getSubjectId(){
+        return this.subjectId++;
+    }
 }
 
 

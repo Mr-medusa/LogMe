@@ -1,5 +1,6 @@
 package red.medusa.logme.format;
 
+import red.medusa.logme.LogMe;
 import red.medusa.logme.logable.LogThreadHolder;
 import red.medusa.logme.logable.Logable;
 import red.medusa.logme.logable.Subject;
@@ -13,7 +14,7 @@ public interface LogFormat extends ParamMessageParser {
 
     LogFormat DEFAULT_LOG_FORMAT = new PlainLogFormat( System.out);
 
-    LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg);
+    LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg, LogMe logMe);
 
     /**
      * 处理标题

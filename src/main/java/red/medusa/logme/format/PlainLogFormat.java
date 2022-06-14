@@ -1,5 +1,6 @@
 package red.medusa.logme.format;
 
+import red.medusa.logme.LogMe;
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.logable.LogThreadHolder;
 import red.medusa.logme.logable.Logable;
@@ -29,14 +30,14 @@ public class PlainLogFormat extends AbstractLogFormat {
      * @param msg     具体的日志信息
      */
     @Override
-    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg) {
+    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg, LogMe logMe) {
         this.handleMsgIfNecessary(msg);
         trace = this.simpleTrace(trace);
         StringBuilder sb = new StringBuilder();
         sb.append(new SimpleDateFormat("mm分ss秒.S").format(new Date()));
         sb.append(" <").append(Thread.currentThread().getName()).append("> ");
         sb.append(msg).append(" | ").append(trace);
-        return new LogThreadHolder(sb, Thread.currentThread(), withOrderFunction);
+        return new LogThreadHolder(sb, Thread.currentThread(),logMe.getSubjectId(), withOrderFunction);
     }
 
     /**

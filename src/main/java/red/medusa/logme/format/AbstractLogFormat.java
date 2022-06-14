@@ -101,6 +101,10 @@ public abstract class AbstractLogFormat implements LogFormat {
                         .computeIfAbsent(msg.getParam(), (key) -> LogMe.randomColor());
 
                 ConsoleStr consoleStr = new ConsoleStr(msg.getMsg()).color(rgb);
+                if(msg.getHighlight() != null){
+                    consoleStr = msg.getHighlight().apply(consoleStr);
+                }
+
                 sb.append(consoleStr);
             }else{
                 sb.append(msg.getMsg());

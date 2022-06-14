@@ -1,5 +1,6 @@
 package red.medusa.logme.format;
 
+import red.medusa.logme.LogMe;
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.color.Emoji;
 import red.medusa.logme.logable.LogThreadHolder;
@@ -40,7 +41,7 @@ public class DefaultLogFormat implements LogFormat {
      * @param msg     具体的日志信息
      */
     @Override
-    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg) {
+    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg, LogMe logMe) {
         int lastIndex = trace.lastIndexOf('.');
         int secondIndex = trace.lastIndexOf('.', lastIndex - 1);
         int thirdIndex = trace.lastIndexOf('.', secondIndex - 1);
@@ -69,7 +70,7 @@ public class DefaultLogFormat implements LogFormat {
         // 调用位置
         lineLog = lineLog.another(" | " + trace).blue();
 
-        return new LogThreadHolder(lineLog, Thread.currentThread(), withOrderFunction);
+        return new LogThreadHolder(lineLog, Thread.currentThread(), logMe.getSubjectId(),withOrderFunction);
     }
 
     /**

@@ -1,5 +1,6 @@
 package red.medusa.logme.format;
 
+import red.medusa.logme.LogMe;
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.color.Emoji;
 import red.medusa.logme.logable.LogThreadHolder;
@@ -30,7 +31,7 @@ public class PrettyLogFormat extends AbstractLogFormat {
      * @param msg     具体的日志信息
      */
     @Override
-    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg) {
+    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg, LogMe logMe) {
         this.handleMsgIfNecessary(msg);
         trace = this.simpleTrace(trace);
         ConsoleStr lineLog = new ConsoleStr(new SimpleDateFormat("mm分ss秒.S").format(new Date()))  // 时间
@@ -56,14 +57,14 @@ public class PrettyLogFormat extends AbstractLogFormat {
         // 调用位置
         lineLog = lineLog.another(" | " + trace).blue();                                            // 调用位置
 
-        return new LogThreadHolder(lineLog, Thread.currentThread(), withOrderFunction);
+        return new LogThreadHolder(lineLog, Thread.currentThread(), logMe.getSubjectId(), withOrderFunction);
     }
 
     /**
      * 输出日志之前先输出标题 Subject
-     *
+     * <p>
      * 有缩进的 Subject 标题以 | 打头 否则 ----> 打头,例如:
-     *
+     * <p>
      * --->           (LimeGreen)     < Fibonacci-0 >
      */
     @Override
@@ -81,9 +82,9 @@ public class PrettyLogFormat extends AbstractLogFormat {
      *
      * @param intent  缩进
      * @param logable 具体的日志
-     *
-     * 例如:
-     * |   |   |   |   |   6> 27分37秒.378 <main> final number is 1 | TraceTest.fibonacci(TraceTest.java:37)
+     *                <p>
+     *                例如:
+     *                |   |   |   |   |   6> 27分37秒.378 <main> final number is 1 | TraceTest.fibonacci(TraceTest.java:37)
      */
     @Override
     public void printSubject(int intent, Logable logable) {
