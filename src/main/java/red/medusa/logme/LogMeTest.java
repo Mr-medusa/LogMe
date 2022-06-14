@@ -43,9 +43,9 @@ public class LogMeTest {
         Arrays.stream(threads).forEach(Thread::start);
         Thread.sleep(30);
 
-//        logMe.setChild(logMe2);
-//        logMe.print();
-        logMe2.print();
+       logMe.setChild(logMe2);
+       logMe.print();
+        // logMe2.print();
     }
 
     public static long fibonacci(long number) {

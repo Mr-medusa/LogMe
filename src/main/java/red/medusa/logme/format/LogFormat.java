@@ -11,7 +11,7 @@ import red.medusa.logme.logable.message.ParamMessageParser;
  */
 public interface LogFormat extends ParamMessageParser {
 
-    LogFormat DEFAULT_LOG_FORMAT = new PrettyLogFormat( System.out);
+    LogFormat DEFAULT_LOG_FORMAT = new PlainLogFormat( System.out);
 
     LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg);
 

@@ -41,6 +41,7 @@ public class Subject {
     public Subject mount(Subject subject) {
         // 如果存在于 root 的子节点中则移除
         this.logMe.getRoot().getChildren().remove(this);
+        this.setIndent(subject.getIndent()+1);
         subject.children.add(this);
         return this;
     }
