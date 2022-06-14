@@ -9,6 +9,7 @@ import java.util.function.Function;
 public class LogThreadHolder implements Logable {
     private static final ThreadLocal<Integer> counter = ThreadLocal.withInitial(()-> 0);
     public final int id;
+    private int indent;
     private final Object log;
     private final Thread thread;
     private Function<LogThreadHolder,Object> withOrderFunction;
@@ -42,5 +43,13 @@ public class LogThreadHolder implements Logable {
 
     public Object getLog() {
         return log;
+    }
+
+    public int getIndent() {
+        return indent;
+    }
+
+    public void setIndent(int indent) {
+        this.indent = indent;
     }
 }

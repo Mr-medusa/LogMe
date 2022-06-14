@@ -11,7 +11,9 @@ import java.util.*;
  * @date 2022/6/9
  */
 public class Subject {
+    // 进用来获取LogMe里的Root使用,用来简化 mount 时额外传递
     private LogMe logMe;
+    private int indent = 0;
     private final String name;
     private final String date;
     private final ConsoleStr.RGB color = Configuration.MSG_COLOR != null ? Configuration.MSG_COLOR : LogMe.randomColor();
@@ -81,6 +83,14 @@ public class Subject {
 
     public void setLogMe(LogMe logMe) {
         this.logMe = logMe;
+    }
+
+    public int getIndent() {
+        return indent;
+    }
+
+    public void setIndent(int indent) {
+        this.indent = indent;
     }
 
     public static class NamingGenerator {

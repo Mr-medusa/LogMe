@@ -17,6 +17,7 @@ import java.util.function.Function;
  * @date 2022/6/11
  */
 public class DefaultLogFormat implements LogFormat {
+
     public static ConsoleStr.RGB CYAN = new ConsoleStr.RGB(0, 135, 135);
     private PrintStream printStream;
 
@@ -39,7 +40,7 @@ public class DefaultLogFormat implements LogFormat {
      * @param msg     具体的日志信息
      */
     @Override
-    public LogThreadHolder format(String trace, Subject subject, boolean[] params, String msg) {
+    public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg) {
         int lastIndex = trace.lastIndexOf('.');
         int secondIndex = trace.lastIndexOf('.', lastIndex - 1);
         int thirdIndex = trace.lastIndexOf('.', secondIndex - 1);
@@ -54,7 +55,7 @@ public class DefaultLogFormat implements LogFormat {
             lineLog = lineLog.another(new Emoji() + " ").bold().color(subject.getColor());
 
         // 日志摘要
-        lineLog = lineLog.another(msg)
+        lineLog = lineLog.another(msg.toString())
                 .color(subject.getColor())
                 .underline()
                 .bold()
@@ -75,11 +76,11 @@ public class DefaultLogFormat implements LogFormat {
      * 输出日志之前先输出标题 Subject
      */
     @Override
-    public void printSubjectLog(Subject subject, int intent, Thread thread) {
+    public void printSubjectLog(Subject subject,  Thread thread) {
         if (thread == null || subject.getThread() == thread) {
             ConsoleStr str = new ConsoleStr("           (" + subject.getColor() + ")     < " + subject + " >           ").color(CYAN);
             printStream.println(new ConsoleStr().append(String.join("",
-                    Collections.nCopies(intent, "   "))).toString()
+                    Collections.nCopies(subject.getIndent(), "   "))).toString()
                     + str.italics().framed());
         }
     }

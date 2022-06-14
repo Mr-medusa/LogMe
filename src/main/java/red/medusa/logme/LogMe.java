@@ -3,6 +3,7 @@ package red.medusa.logme;
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.format.LogFormat;
 import red.medusa.logme.logable.*;
+import red.medusa.logme.logable.message.ParamMsg;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -21,32 +22,49 @@ public class LogMe extends SubjectFactory {
     public LogMe(Subject root) {
         super();
         this.root = root;
-        LogContext.setLogMe(this);
     }
 
-    public synchronized LogLine i(Subject subject, String msg, boolean... params) {
-        return i(subject, msg, 2, params);
+    public synchronized LogLine i(Subject subject, Object msg, boolean... params) {
+        return i(subject, msg, 2, null, params);
     }
 
-    public synchronized LogLine i(Subject subject, String msg, int deep, boolean... params) {
+    /**
+     * @see LogLine#prepareChildren(String...)
+     */
+    public synchronized LogLine i(Subject subject, Object msg, int deep, Integer indent, boolean... params) {
+        if (subject == null) {
+            throw new IllegalArgumentException("Subject must not be null");
+        }
         if (this.getClose() != null && this.getClose()) {
-            return new LogLine(null,null);
+            return new LogLine(null, null);
         }
         LogThreadHolder o = create(subject, msg, new Throwable().getStackTrace(), deep, params);
+        if (indent != null) {
+            // 因为先执行的 childParameterI,所以这里获取到的 intent 需要减1获取到正确的 intent
+            o.setIndent(indent - 1);
+        } else {
+            o.setIndent(subject.getIndent());
+        }
 
         if (subject.getColor() == null) {
             throw new IllegalArgumentException("Subject 已经存在: " + subject.getName());
         }
         subject.addLog(o);
-        return new LogLine(subject,this);
+        return new LogLine(subject, this);
     }
 
     public synchronized LogLine childI(String msg, boolean... params) {
-        return i(LogContext.getLogLine().getSubject(), msg, 2, params);
+        // 添加到子级
+        return i(LogContext.getLogLine().getSubject(), msg, 2, null, params);
     }
 
-    public synchronized LogLine childParameterI(Object key,String msg, boolean... params) {
-        return i(LogContext.getParameterLogLine(key).getSubject(), msg, 2, params);
+
+    public synchronized LogLine childParameterI(ParamMsg paramMsg,boolean... params) {
+        Integer indent = null;
+        if (LogContext.containsParameter(paramMsg.getParam())) {
+            indent = LogContext.getParameterLogLine(paramMsg.getParam()).getSubject().getIndent();
+        }
+        return i(LogContext.getLogLine().getSubject(), paramMsg, 2, indent, params);
     }
 
     public void print() {
@@ -70,13 +88,29 @@ public class LogMe extends SubjectFactory {
             return;
         }
         if (subject == null) {
-            this.logFormat.printSubjectLog(root,0,thread);
+            this.logFormat.printSubjectLog(root, thread);
             for (Subject child : root.getChildren()) {
-                printSubject(child, 0, thread);
+                printSubject(child, thread);
             }
         } else {
-            printSubject(subject, 0, thread);
+            printSubject(subject, thread);
         }
+    }
+
+    /**
+     * @see LogMe#childParameterI
+     * <p>
+     * 清除程序某一执行块中的参数信息
+     */
+    public void withParamContext(Runnable runnable) {
+        LogContext.clearParameter();
+        runnable.run();
+        LogContext.clearParameter();
+    }
+
+    public LogMe clearParameter(){
+        LogContext.clearParameter();
+        return this;
     }
 
     public void printAll() {
@@ -85,31 +119,30 @@ public class LogMe extends SubjectFactory {
         }
     }
 
-    private void printSubject(Subject subject, int indent, Thread thread) {
-        if (indent >= this.getMaxStackVal()) {
-            this.logFormat.stackOver(indent);
+    private void printSubject(Subject subject, Thread thread) {
+        if (subject.getIndent() >= this.getMaxStackVal()) {
+            this.logFormat.stackOver(subject.getIndent());
             return;
         }
-        this.logFormat.printSubjectLog(subject, indent, thread);
+        this.logFormat.printSubjectLog(subject, thread);
         List<Logable> lines = subject.getLogLines();
-        int finalIndent = indent;
         lines.forEach(it -> {
             if (it instanceof LogThreadHolder) {
                 if (thread == null || ((LogThreadHolder) it).getThread() == thread) {
-                    this.logFormat.printSubject(finalIndent, it);
+                    this.logFormat.printSubject(((LogThreadHolder) it).getIndent(), it);
                 }
-            } else
-                printSubject(((LogLine) it).getSubject(), finalIndent + 1, thread);
+            } else {
+                printSubject(((LogLine) it).getSubject(), thread);
+            }
         });
         if (!subject.getChildren().isEmpty()) {
-            indent += 1;
             for (Subject child : subject.getChildren()) {
-                printSubject(child, indent, thread);
+                printSubject(child, thread);
             }
         }
     }
 
-    private LogThreadHolder create(Subject subject, String msg, StackTraceElement[] stackTrace, int deep, boolean... params) {
+    private LogThreadHolder create(Subject subject, Object msg, StackTraceElement[] stackTrace, int deep, boolean... params) {
         String trace = stackTrace[deep].toString();
         return this.logFormat.format(trace, subject, params, msg);
     }
@@ -566,7 +599,6 @@ public class LogMe extends SubjectFactory {
         }
         this.logFormat = logFormat;
     }
-
 
 
 }

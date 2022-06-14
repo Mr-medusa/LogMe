@@ -293,6 +293,12 @@ public class ConsoleStr {
 		return newInstance;
 	}
 
+	public ConsoleStr next(ConsoleStr next){
+		this.next = next;
+		next.pre = this;
+		return next;
+	}
+
 	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 	// +                            wrap                                          -+-
 	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
