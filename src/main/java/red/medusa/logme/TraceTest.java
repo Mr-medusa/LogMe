@@ -2,6 +2,7 @@ package red.medusa.logme;
 
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.format.PlainLogFormat;
+import red.medusa.logme.format.PrettyLogFormat;
 import red.medusa.logme.logable.Subject;
 import red.medusa.logme.logable.message.ParamMsg;
 
@@ -13,7 +14,7 @@ public class TraceTest {
     static LogMe logMe = SubjectFactory.getLogMe(LogMeTest.class);
     static LogMe hello = LogMe.getLogMe("Hello");
     public static void main(String[] args) {
-        logMe.setLogFormat(new PlainLogFormat(System.out));
+        logMe.setLogFormat(new PrettyLogFormat(System.out));
         Subject fibonacciSubject = logMe.newSubject("Fibonacci");
         logMe.withParamContext(() -> {
             logMe.i(fibonacciSubject, "one").prepareChildren();
