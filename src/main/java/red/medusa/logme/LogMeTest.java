@@ -3,8 +3,6 @@ package red.medusa.logme;
 import red.medusa.logme.logable.LogContext;
 import red.medusa.logme.logable.Subject;
 
-import java.util.Arrays;
-
 /**
  * @author Mr.Medusa
  * @date 2022/6/6
@@ -14,38 +12,45 @@ public class LogMeTest {
     static LogMe logMe2 = SubjectFactory.getLogMe(LogMeTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        Subject fibonacci1 = logMe.newSubject("Fibonacci");
-        Subject fibonacci2 = logMe.newSubject("Fibonacci2").mount(fibonacci1);
-        Subject fibonacci3 = logMe.newSubject("Fibonacci3");
-        logMe.i(fibonacci1,"1");
-        logMe.i(fibonacci1,"2");
+        // logMe.i("Hello");
+        // logMe.i("World");
+        Subject subject = logMe.newSubject("f1");
+        logMe.i(subject,"f1");
+        logMe.i(subject,"f3");
+        logMe.i(logMe.newSubject("foo"),"bar");
+        logMe.print();
+        // Subject fibonacci1 = logMe.newSubject("Fibonacci");
+        // Subject fibonacci2 = logMe.newSubject("Fibonacci2").mount(fibonacci1);
+        // Subject fibonacci3 = logMe.newSubject("Fibonacci3");
+        // logMe.i(fibonacci1, "1");
+        // logMe.i(fibonacci1, "2");
+        //
+        // logMe.i(fibonacci2, "3");
+        // logMe.i(fibonacci2, "4");
+        //
+        // logMe.i(fibonacci3, "5");
+        // logMe.i(fibonacci3, "6");
 
-        logMe.i(fibonacci2,"3");
-        logMe.i(fibonacci2,"4");
-
-        logMe.i(fibonacci3,"5");
-        logMe.i(fibonacci3,"6");
-
-        Subject fibonacci = logMe2.newSubject("Fibonacci");
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                logMe2.i(fibonacci, "one").prepareChildren();
-                long fibonacci1 = fibonacci(3);
-                logMe2.i(fibonacci, "res is => " + fibonacci1);
-            }
-        };
-        Thread[] threads = new Thread[2];
-        for (int i = 0; i < 2; i++) {
-            threads[i] = new Thread(runnable);
-        }
-
-        Arrays.stream(threads).forEach(Thread::start);
-        Thread.sleep(30);
-
-       logMe.setChild(logMe2);
-       logMe.print();
-        logMe2.print();
+        // Subject fibonacci = logMe2.newSubject("Fibonacci");
+        // Runnable runnable = new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         logMe2.i(fibonacci, "one").prepareChildren();
+        //         long fibonacci1 = fibonacci(3);
+        //         logMe2.i(fibonacci, "res is => " + fibonacci1);
+        //     }
+        // };
+        // Thread[] threads = new Thread[2];
+        // for (int i = 0; i < 2; i++) {
+        //     threads[i] = new Thread(runnable);
+        // }
+        //
+        // Arrays.stream(threads).forEach(Thread::start);
+        // Thread.sleep(30);
+        //
+        // logMe.setChild(logMe2);
+        // logMe.print();
+        // logMe2.print();
     }
 
     public static long fibonacci(long number) {

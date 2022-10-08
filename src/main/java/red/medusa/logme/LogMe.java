@@ -25,6 +25,19 @@ public class LogMe extends SubjectFactory {
         this.root = root;
     }
 
+    /**
+     * @param msg
+     * @param params 0:Emoji 1: Emoji
+     * @return
+     */
+    public synchronized LogLine i(Object msg, boolean... params) {
+        Subject subject = LOGME_DEFAULT_SUBJECT_MAP.get(this);
+        if (subject == null) {
+            throw new IllegalArgumentException("Subject was initiated");
+        }
+        return i(subject, msg, 2, null, params);
+    }
+
     public synchronized LogLine i(Subject subject, Object msg, boolean... params) {
         return i(subject, msg, 2, null, params);
     }
@@ -89,7 +102,7 @@ public class LogMe extends SubjectFactory {
             return;
         }
         if (subject == null) {
-            this.logFormat.printSubjectLog(root, thread);
+            // this.logFormat.printSubjectLog(root, thread);
             for (Subject child : root.getChildren()) {
                 printSubject(child, thread);
             }
