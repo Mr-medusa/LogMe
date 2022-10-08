@@ -12,16 +12,16 @@ import red.medusa.logme.logable.message.ParamMessageParser;
  */
 public interface LogFormat extends ParamMessageParser {
 
-    LogFormat DEFAULT_LOG_FORMAT = new PlainLogFormat( System.out);
+    LogFormat DEFAULT_LOG_FORMAT = new PrettyLogFormat(System.out);
 
     LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg, LogMe logMe);
 
     /**
      * 处理标题
-     *
+     * <p>
      * 输出日志之前先输出标题 Subject
      */
-    void printSubjectLog(Subject subject,Thread thread);
+    void printSubjectLog(Subject subject, Thread thread);
 
     /**
      * 处理缩进

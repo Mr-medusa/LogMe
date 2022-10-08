@@ -1,5 +1,6 @@
 package red.medusa.logme;
 
+import red.medusa.logme.format.LogFormat;
 import red.medusa.logme.logable.Subject;
 
 import java.text.SimpleDateFormat;
@@ -51,5 +52,13 @@ public abstract class SubjectFactory extends Configuration{
 
     public static LogMe getLogMe(Class<?> clazz) {
         return new LogMe(new Subject(clazz.getName()));
+    }
+
+    public static LogMe getLogMe(String name, LogFormat logFormat) {
+        return new LogMe(new Subject(name)).setLogFormat(logFormat);
+    }
+
+    public static LogMe getLogMe(Class<?> clazz, LogFormat logFormat) {
+        return new LogMe(new Subject(clazz.getName())).setLogFormat(logFormat);
     }
 }

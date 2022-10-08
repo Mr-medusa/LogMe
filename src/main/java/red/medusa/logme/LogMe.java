@@ -594,11 +594,12 @@ public class LogMe extends SubjectFactory {
     }
 
     // --- format
-    public void setLogFormat(LogFormat logFormat) {
+    public LogMe setLogFormat(LogFormat logFormat) {
         if (logFormat == null) {
             throw new IllegalArgumentException("logFormat must not be null");
         }
         this.logFormat = logFormat;
+        return this;
     }
 
     public int getSubjectId(){
