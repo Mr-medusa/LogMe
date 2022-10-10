@@ -31,9 +31,15 @@ public class LogMe extends SubjectFactory {
      * @return
      */
     public synchronized LogLine i(Object msg, boolean... params) {
-        Subject subject = LOGME_DEFAULT_SUBJECT_MAP.get(this);
-        if (subject == null) {
-            throw new IllegalArgumentException("Subject was initiated");
+        Subject subject;
+        LogLine logLine = LogContext.getLogLine();
+        if (logLine == null) {
+            subject = LOGME_DEFAULT_SUBJECT_MAP.get(this);
+            if (subject == null) {
+                throw new IllegalArgumentException("Subject was initiated");
+            }
+        } else {
+            subject = logLine.getSubject();
         }
         return i(subject, msg, 2, null, params);
     }
