@@ -9,6 +9,7 @@ import red.medusa.logme.LogMe;
  * @date 2022/6/10
  */
 public class LogLine implements Logable {
+    private LogLine parentLogLine;
     private Subject parentSubject;
     private Subject subject;
     private final LogMe logMe;
@@ -38,6 +39,11 @@ public class LogLine implements Logable {
         // 重置 LogContext LogLine 为当前 LogLine
         LogContext.setLogLine(this);
         return subject;
+    }
+
+    public synchronized Subject stepBackSubject(){
+        LogContext.setLogLine(this.parentLogLine);
+        return parentSubject;
     }
 
     public synchronized Subject prepareParameterChildren(Object param, String... name) {
@@ -83,5 +89,13 @@ public class LogLine implements Logable {
 
     public void setParam(Object param) {
         this.param = param;
+    }
+
+    public LogLine getParentLogLine() {
+        return parentLogLine;
+    }
+
+    public void setParentLogLine(LogLine parentLogLine) {
+        this.parentLogLine = parentLogLine;
     }
 }
