@@ -37,12 +37,16 @@ public class LogLine implements Logable {
         // 设置缩进
         this.subject.setIndent(this.parentSubject.getIndent() + 1);
         // 重置 LogContext LogLine 为当前 LogLine
+        this.parentLogLine = LogContext.getLogLine();
         LogContext.setLogLine(this);
         return subject;
     }
 
     public synchronized Subject stepBackSubject(){
-        LogContext.setLogLine(this.parentLogLine);
+        if(LogContext.getLogLine() == null || LogContext.getLogLine().getParentLogLine() == null){
+            throw new IllegalArgumentException("请先调用 prepareChildren 方法后在使用");
+        }
+        LogContext.setLogLine(LogContext.getLogLine().getParentLogLine());
         return parentSubject;
     }
 
