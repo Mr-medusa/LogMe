@@ -44,7 +44,8 @@ public class LogLine implements Logable {
 
     public synchronized Subject stepBackSubject(){
         if(LogContext.getLogLine() == null || LogContext.getLogLine().getParentLogLine() == null){
-            throw new IllegalArgumentException("请先调用 prepareChildren 方法后在使用");
+            LogContext.setLogLine(null);
+            return parentSubject;
         }
         LogContext.setLogLine(LogContext.getLogLine().getParentLogLine());
         return parentSubject;
