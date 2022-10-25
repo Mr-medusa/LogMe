@@ -42,7 +42,7 @@ public class LogLine implements Logable {
         return subject;
     }
 
-    public synchronized Subject stepBackSubject(){
+    public synchronized Subject back(){
         if(LogContext.getLogLine() == null || LogContext.getLogLine().getParentLogLine() == null){
             LogContext.setLogLine(null);
             return parentSubject;
