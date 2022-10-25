@@ -45,10 +45,11 @@ public class LogLine implements Logable {
     public synchronized LogLine back(){
         if(LogContext.getLogLine() == null || LogContext.getLogLine().getParentLogLine() == null){
             LogContext.setLogLine(null);
-            return null;
+            return this;
         }
-        LogContext.setLogLine(LogContext.getLogLine().getParentLogLine());
-        return LogContext.getLogLine().getParentLogLine();
+        LogLine parentLogLine = LogContext.getLogLine().getParentLogLine();
+        LogContext.setLogLine(parentLogLine);
+        return parentLogLine != null ? parentLogLine : this;
     }
 
     public synchronized Subject prepareParameterChildren(Object param, String... name) {
