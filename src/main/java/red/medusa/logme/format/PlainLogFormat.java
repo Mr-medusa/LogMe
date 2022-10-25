@@ -33,24 +33,29 @@ public class PlainLogFormat extends AbstractLogFormat {
     public LogThreadHolder format(String trace, Subject subject, boolean[] params, Object msg, LogMe logMe) {
         this.handleMsgIfNecessary(msg);
         trace = this.simpleTrace(trace);
-        StringBuilder sb = new StringBuilder();
-        sb.append(new SimpleDateFormat("mm分ss秒.S").format(new Date()));
-        sb.append(" <").append(Thread.currentThread().getName()).append("> ");
-        sb.append(msg).append(" | ").append(trace);
-        return new LogThreadHolder(sb, Thread.currentThread(),logMe.getSubjectId(), withOrderFunction);
+        Object sb;
+        if (this.patternFunction != null) {
+            sb = this.patternFunction.apply(new MsgWithTrace(msg, trace));
+        } else {
+            sb = new StringBuilder();
+            ((StringBuilder)sb).append(new SimpleDateFormat("mm分ss秒.S").format(new Date()));
+            ((StringBuilder)sb).append(" <").append(Thread.currentThread().getName()).append("> ");
+            ((StringBuilder)sb).append(msg).append(" | ").append(trace);
+        }
+        return new LogThreadHolder(sb, Thread.currentThread(), logMe.getSubjectId(), withOrderFunction);
     }
 
     /**
      * 处理标题
-     *
+     * <p>
      * 输出日志之前先输出标题 Subject
      */
     @Override
-    public void printSubjectLog(Subject subject,  Thread thread) {
+    public void printSubjectLog(Subject subject, Thread thread) {
         if (thread == null || subject.getThread() == thread) {
             String sb = "|" + String.join("", Collections.nCopies(subject.getIndent(), "   ")) +
-                    new ConsoleStr( "           (" + subject.getColor() + ")     < " + subject + " >           ")
-                    .underline();
+                    new ConsoleStr("           (" + subject.getColor() + ")     < " + subject + " >           ")
+                            .underline();
             printStream.println(sb);
         }
     }
@@ -63,7 +68,7 @@ public class PlainLogFormat extends AbstractLogFormat {
      */
     @Override
     public void printSubject(int intent, Logable logable) {
-        String sb = "|" + String.join("", Collections.nCopies(intent, "   ")) + "\\ " +  logable;
+        String sb = "|" + String.join("", Collections.nCopies(intent, "   ")) + "\\ " + logable;
         printStream.println(sb);
     }
 

@@ -23,7 +23,7 @@ public abstract class AbstractLogFormat implements LogFormat {
     protected PrintStream printStream;
     public ConsoleStr.RGB titleAndTimeColor = new ConsoleStr.RGB(255, 255, 255);
     public Map<Integer, ConsoleStr.RGB> intentToColor = new HashMap<>();
-
+    protected Function<LogFormat.MsgWithTrace,Object> patternFunction = null;
     /**
      * 处理附加的序号
      */
@@ -34,7 +34,10 @@ public abstract class AbstractLogFormat implements LogFormat {
     public AbstractLogFormat(PrintStream printStream) {
         this.printStream = printStream;
     }
-
+    public LogFormat pattern(Function<LogFormat.MsgWithTrace,Object> patternFunction){
+        this.patternFunction = patternFunction;
+        return this;
+    }
 
     /**
      * 调用栈信息

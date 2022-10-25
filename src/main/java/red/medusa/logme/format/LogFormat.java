@@ -32,4 +32,30 @@ public interface LogFormat extends ParamMessageParser {
     void printSubject(int intent, Logable logable);
 
     void stackOver(int indent);
+
+    class MsgWithTrace{
+        private Object msg;
+        private String trace;
+
+        public MsgWithTrace(Object msg, String trace) {
+            this.msg = msg;
+            this.trace = trace;
+        }
+
+        public Object getMsg() {
+            return msg;
+        }
+
+        public void setMsg(Object msg) {
+            this.msg = msg;
+        }
+
+        public String getTrace() {
+            return trace;
+        }
+
+        public void setTrace(String trace) {
+            this.trace = trace;
+        }
+    }
 }
