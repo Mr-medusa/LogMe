@@ -42,13 +42,13 @@ public class LogLine implements Logable {
         return subject;
     }
 
-    public synchronized Subject back(){
+    public synchronized LogLine back(){
         if(LogContext.getLogLine() == null || LogContext.getLogLine().getParentLogLine() == null){
             LogContext.setLogLine(null);
-            return parentSubject;
+            return null;
         }
         LogContext.setLogLine(LogContext.getLogLine().getParentLogLine());
-        return parentSubject;
+        return LogContext.getLogLine().getParentLogLine();
     }
 
     public synchronized Subject prepareParameterChildren(Object param, String... name) {
