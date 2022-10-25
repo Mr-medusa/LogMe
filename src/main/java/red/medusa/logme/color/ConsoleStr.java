@@ -31,8 +31,8 @@ public class ConsoleStr {
 	// --- 为每一个被着色的字符串设置分隔符
 	private String delimiter;
 	// --- ANSI escape code
-	private final Set<Object> codes = new HashSet<>(1);
-	private final Set<RGB> rgbCodes = new LinkedHashSet<>(1);
+	protected final Set<Object> codes = new HashSet<>(1);
+	protected final Set<RGB> rgbCodes = new LinkedHashSet<>(1);
 
 	/**
 	 * 记录前后子串
@@ -235,7 +235,7 @@ public class ConsoleStr {
 		return this.returnStr(FontStyle.FRAMED, text);
 	}
 
-	private ConsoleStr returnStr(Enum<?> style, String... text) {
+	protected ConsoleStr returnStr(Enum<?> style, String... text) {
 		if(alwaysReturnNewOne){
 			ConsoleStr another = another();
 			if (text.length == 1)
@@ -376,7 +376,7 @@ public class ConsoleStr {
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//+             ANSI escape code 常量值           +
 	//++++++++++++++++++++++++++++++++++++++++++++++++
-	private enum FontStyle {
+	protected enum FontStyle {
 		CROSSED("9"), NOT_CROSSED_OUT("29"), DOUBLE_UNDERLINE("21"), FRAMED("51"),
 		BOLD("1"), ITALICS("3"), UNDERLINE("4"), RESET(M);
 		private final String code;
@@ -391,7 +391,7 @@ public class ConsoleStr {
 		}
 	}
 
-	private enum FontColor {
+	protected enum FontColor {
 		REVERSE("7"),
 		BLACK("30"), BRIGHT_BLACK("90"), BACKGROUND_BLACK("40"),
 		RED("31"), BRIGHT_RED("91"), BACKGROUND_RED("41"),
@@ -460,12 +460,20 @@ public class ConsoleStr {
 			return Objects.hash(fontColor);
 		}
 
+		public FontColor getFontColor() {
+			return fontColor;
+		}
+
+		public void setFontColor(FontColor fontColor) {
+			this.fontColor = fontColor;
+		}
+
 		@Override
 		public String toString() {
 			return this.name != null ? this.name : R + "," + G + "," + B;
 		}
 	}
-	private static void validateRgbRange(int R, int G, int B) {
+	public static void validateRgbRange(int R, int G, int B) {
 		if (0 > R || 255 < R) {
 			throw new RuntimeException("R【" + R + "】值范围为【0-255】");
 		}
