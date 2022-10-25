@@ -51,14 +51,14 @@ public abstract class SubjectFactory extends Configuration {
     public static LogMe getLogMe(String name) {
         LogMe logMe = new LogMe(new Subject(name));
         Subject subject = logMe.newSubject(name);
-        LOGME_DEFAULT_SUBJECT_MAP.put(logMe,subject);
+        LOGME_DEFAULT_SUBJECT_MAP.put(logMe, subject);
         return logMe;
     }
 
     public static LogMe getLogMe(Class<?> clazz) {
         LogMe logMe = new LogMe(new Subject(clazz.getName()));
         Subject subject = logMe.newSubject(clazz.getName());
-        LOGME_DEFAULT_SUBJECT_MAP.put(logMe,subject);
+        LOGME_DEFAULT_SUBJECT_MAP.put(logMe, subject);
         return logMe;
     }
 
@@ -68,5 +68,23 @@ public abstract class SubjectFactory extends Configuration {
 
     public static LogMe getLogMe(Class<?> clazz, LogFormat logFormat) {
         return getLogMe(clazz).setLogFormat(logFormat);
+    }
+
+    public LogMe createCurrentSubject(String subject) {
+        LogMe logMe = (LogMe) this;
+        LOGME_DEFAULT_SUBJECT_MAP.put(logMe, logMe.newSubject(subject));
+        return logMe;
+    }
+
+    public LogMe createCurrentSubject(Class<?> subjectClass) {
+        LogMe logMe = (LogMe) this;
+        LOGME_DEFAULT_SUBJECT_MAP.put(logMe, logMe.newSubject(subjectClass.getName()));
+        return logMe;
+    }
+
+    public LogMe toggleCurrentSubject(Subject subject) {
+        LogMe logMe = (LogMe) this;
+        LOGME_DEFAULT_SUBJECT_MAP.put(logMe, subject);
+        return logMe;
     }
 }
