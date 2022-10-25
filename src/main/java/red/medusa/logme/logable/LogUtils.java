@@ -73,18 +73,6 @@ public class LogUtils {
     public static Object mArgArgPretty(String constructorInfo, Object argArgs, Object... params) {
         return m(constructorInfo, argArgs, kv -> new ConsoleStr[]{C.purple(kv[0]).bold(), C.brightBlue(kv[1])}, params);
     }
-
-    public static void main(String[] args) {
-        System.out.println(m("main(String[] args)", "hello", "world"));
-        System.out.println(mArgArg("main(String[] ...args)", new Object[]{"hello", "world"}));
-        System.out.println(mArgArg("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
-        System.out.println(mArgArg("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
-        System.out.println(mPretty("main(String[] args)", "hello", "world"));
-        System.out.println(mArgArgPretty("main(String[] ...args)", new Object[]{"hello", "world"}));
-        System.out.println(mArgArgPretty("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
-        System.out.println(mArgArgPretty("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
-        // System.out.println(Arrays.toString("String[] ... args ".split("([\\.]{3}\\s*(?=\\w))|\\s+(?=\\w)")));
-    }
 }
 
 
