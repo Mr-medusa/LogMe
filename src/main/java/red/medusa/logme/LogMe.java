@@ -25,6 +25,34 @@ public class LogMe extends SubjectFactory {
         this.root = root;
     }
 
+    private synchronized LogLine i2(String msg, Object... args) {
+        if (args == null || args.length == 0) {
+            return this.i(msg);
+        }
+        StringBuilder sb = new StringBuilder();
+        int[] segmentIndex = new int[args.length];
+        int index = -1;
+        int count = 0;
+        while ((index = msg.indexOf("{}", index + 1)) != -1) {
+            segmentIndex[count++] = index;
+        }
+        for (int i = 0; i < segmentIndex.length; i++) {
+            if (i == 0) {
+                sb.append(msg, 0, segmentIndex[i]);
+            } else {
+                sb.append(msg, segmentIndex[i - 1] + 2, segmentIndex[i]);
+            }
+            sb.append(args[i]);
+        }
+        if (segmentIndex[segmentIndex.length - 1] < msg.length() - 1) {
+            sb.append(msg, segmentIndex[segmentIndex.length - 1] + 2, msg.length())
+                    .append(args[args.length - 1]);
+        } else {
+            sb.append(args[args.length - 1]);
+        }
+        return this.i(sb.toString());
+    }
+
     /**
      * @param msg
      * @param params 0:Emoji 1: Emoji
@@ -79,7 +107,7 @@ public class LogMe extends SubjectFactory {
     }
 
 
-    public synchronized LogLine childParameterI(ParamMsg paramMsg,boolean... params) {
+    public synchronized LogLine childParameterI(ParamMsg paramMsg, boolean... params) {
         Integer indent = null;
         if (LogContext.containsParameter(paramMsg.getParam())) {
             indent = LogContext.getParameterLogLine(paramMsg.getParam()).getSubject().getIndent();
@@ -128,7 +156,7 @@ public class LogMe extends SubjectFactory {
         LogContext.clearParameter();
     }
 
-    public LogMe clearParameter(){
+    public LogMe clearParameter() {
         LogContext.clearParameter();
         return this;
     }
@@ -164,7 +192,7 @@ public class LogMe extends SubjectFactory {
 
     private LogThreadHolder create(Subject subject, Object msg, StackTraceElement[] stackTrace, int deep, boolean... params) {
         String trace = stackTrace[deep].toString();
-        return this.logFormat.format(trace, subject, params, msg,this);
+        return this.logFormat.format(trace, subject, params, msg, this);
     }
 
     public Subject getRoot() {
@@ -621,7 +649,7 @@ public class LogMe extends SubjectFactory {
         return this;
     }
 
-    public int getSubjectId(){
+    public int getSubjectId() {
         return this.subjectId++;
     }
 }
