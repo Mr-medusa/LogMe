@@ -25,7 +25,7 @@ public class LogMe extends SubjectFactory {
         this.root = root;
     }
 
-    private synchronized LogLine i2(String msg, Object... args) {
+    public synchronized LogLine i2(String msg, Object... args) {
         if (args == null || args.length == 0) {
             return this.i(msg);
         }
