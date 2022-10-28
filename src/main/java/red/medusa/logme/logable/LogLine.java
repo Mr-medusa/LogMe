@@ -52,6 +52,14 @@ public class LogLine implements Logable {
         return parentLogLine != null ? parentLogLine : this;
     }
 
+    public synchronized LogLine back(int count){
+        LogLine logLine = this;
+        for (int i = 0; i < count; i++) {
+            logLine = logLine.back();
+        }
+        return logLine;
+    }
+
     public synchronized Subject prepareParameterChildren(Object param, String... name) {
         this.param = param;
         // 加入到父 Subject 的 children 列表
