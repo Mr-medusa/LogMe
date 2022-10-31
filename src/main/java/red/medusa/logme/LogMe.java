@@ -60,7 +60,7 @@ public class LogMe extends SubjectFactory {
      */
     public synchronized LogLine i(Object msg, boolean... params) {
         Subject subject;
-        LogLine logLine = LogContext.getLogLine();
+        LogLine logLine = this.getLogContext().getLogLine();
         if (logLine == null) {
             subject = LOGME_DEFAULT_SUBJECT_MAP.get(this);
             if (subject == null) {
@@ -103,16 +103,16 @@ public class LogMe extends SubjectFactory {
 
     public synchronized LogLine childI(String msg, boolean... params) {
         // 添加到子级
-        return i(LogContext.getLogLine().getSubject(), msg, 2, null, params);
+        return i(this.getLogContext().getLogLine().getSubject(), msg, 2, null, params);
     }
 
 
     public synchronized LogLine childParameterI(ParamMsg paramMsg, boolean... params) {
         Integer indent = null;
-        if (LogContext.containsParameter(paramMsg.getParam())) {
-            indent = LogContext.getParameterLogLine(paramMsg.getParam()).getSubject().getIndent();
+        if (this.getLogContext().containsParameter(paramMsg.getParam())) {
+            indent = this.getLogContext().getParameterLogLine(paramMsg.getParam()).getSubject().getIndent();
         }
-        return i(LogContext.getLogLine().getSubject(), paramMsg, 2, indent, params);
+        return i(this.getLogContext().getLogLine().getSubject(), paramMsg, 2, indent, params);
     }
 
     public void print() {
@@ -151,13 +151,13 @@ public class LogMe extends SubjectFactory {
      * 清除程序某一执行块中的参数信息
      */
     public void withParamContext(Runnable runnable) {
-        LogContext.clearParameter();
+        this.getLogContext().clearParameter();
         runnable.run();
-        LogContext.clearParameter();
+        this.getLogContext().clearParameter();
     }
 
     public LogMe clearParameter() {
-        LogContext.clearParameter();
+        this.getLogContext().clearParameter();
         return this;
     }
 

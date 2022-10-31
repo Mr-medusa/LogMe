@@ -73,6 +73,8 @@ public class LogUtils {
     public static Object mArgArgPretty(String constructorInfo, Object argArgs, Object... params) {
         return m(constructorInfo, argArgs, kv -> new ConsoleStr[]{C.purple(kv[0]).bold(), C.brightBlue(kv[1])}, params);
     }
+
+
 }
 
 

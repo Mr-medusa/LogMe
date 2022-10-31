@@ -1,24 +1,26 @@
 package red.medusa.logme;
 
-import red.medusa.logme.logable.LogContext;
-import red.medusa.logme.logable.Subject;
+import red.medusa.logme.format.PlainLogFormat;
 
 /**
  * @author Mr.Medusa
  * @date 2022/6/6
  */
 public class LogMeTest {
-    static LogMe logMe = SubjectFactory.getLogMe(LogMeTest.class);
+    static LogMe logMe = SubjectFactory.getLogMe(LogMeTest.class,new PlainLogFormat(System.out));
     static LogMe logMe2 = SubjectFactory.getLogMe(LogMeTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        // logMe.i("Hello");
-        // logMe.i("World");
-        Subject subject = logMe.newSubject("f1");
-        logMe.i(subject,"f1");
-        logMe.i(subject,"f3");
-        logMe.i(logMe.newSubject("foo"),"bar");
+        logMe.createCurrentSubject("Hello");
+        logMe.i("1");
+        logMe.i("2").prepareChildren("Hello");
+        logMe.i("3").prepareChildren("Hello");
+        logMe.i("4").prepareChildren("Hello");
+        logMe.i("5").back(2);
+        logMe.i("6");
+        logMe.i("7");
         logMe.print();
+
         // Subject fibonacci1 = logMe.newSubject("Fibonacci");
         // Subject fibonacci2 = logMe.newSubject("Fibonacci2").mount(fibonacci1);
         // Subject fibonacci3 = logMe.newSubject("Fibonacci3");
@@ -30,7 +32,7 @@ public class LogMeTest {
         //
         // logMe.i(fibonacci3, "5");
         // logMe.i(fibonacci3, "6");
-
+        //
         // Subject fibonacci = logMe2.newSubject("Fibonacci");
         // Runnable runnable = new Runnable() {
         //     @Override
@@ -65,7 +67,7 @@ public class LogMeTest {
     }
 
     public static void hellot() {
-        logMe2.i(LogContext.getLogLine().getSubject(), "Hellot");
+        logMe2.i(logMe2.getLogContext().getLogLine().getSubject(), "Hellot");
     }
 
 }

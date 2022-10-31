@@ -1,6 +1,7 @@
 package red.medusa.logme;
 
 import red.medusa.logme.format.LogFormat;
+import red.medusa.logme.logable.LogContext;
 import red.medusa.logme.logable.Subject;
 
 import java.text.SimpleDateFormat;
@@ -12,8 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2022/6/11
  */
 public abstract class SubjectFactory extends Configuration {
+    private final LogContext logContext = new LogContext();
     public static final Map<LogMe, Set<String>> LOG_ME_FOR_SUBJECT_NAMES = new ConcurrentHashMap<>();
-    protected static final Map<LogMe, Subject> LOGME_DEFAULT_SUBJECT_MAP = new ConcurrentHashMap<>();
+    public static final Map<LogMe, Subject> LOGME_DEFAULT_SUBJECT_MAP = new ConcurrentHashMap<>();
 
     public SubjectFactory() {
         LOG_ME_FOR_SUBJECT_NAMES.put((LogMe) this, new HashSet<>());
@@ -86,5 +88,15 @@ public abstract class SubjectFactory extends Configuration {
         LogMe logMe = (LogMe) this;
         LOGME_DEFAULT_SUBJECT_MAP.put(logMe, subject);
         return logMe;
+    }
+
+
+    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+    // +                            log context                                   -+-
+    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+
+
+    public LogContext getLogContext() {
+        return logContext;
     }
 }

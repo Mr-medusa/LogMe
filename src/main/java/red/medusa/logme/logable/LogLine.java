@@ -37,18 +37,18 @@ public class LogLine implements Logable {
         // 设置缩进
         this.subject.setIndent(this.parentSubject.getIndent() + 1);
         // 重置 LogContext LogLine 为当前 LogLine
-        this.parentLogLine = LogContext.getLogLine();
-        LogContext.setLogLine(this);
+        this.parentLogLine = logMe.getLogContext().getLogLine();
+        logMe.getLogContext().setLogLine(this);
         return subject;
     }
 
     public synchronized LogLine back(){
-        if(LogContext.getLogLine() == null || LogContext.getLogLine().getParentLogLine() == null){
-            LogContext.setLogLine(null);
+        if(logMe.getLogContext().getLogLine() == null || logMe.getLogContext().getLogLine().getParentLogLine() == null){
+            logMe.getLogContext().setLogLine(null);
             return this;
         }
-        LogLine parentLogLine = LogContext.getLogLine().getParentLogLine();
-        LogContext.setLogLine(parentLogLine);
+        LogLine parentLogLine = logMe.getLogContext().getLogLine().getParentLogLine();
+        logMe.getLogContext().setLogLine(parentLogLine);
         return parentLogLine != null ? parentLogLine : this;
     }
 
@@ -70,12 +70,12 @@ public class LogLine implements Logable {
         // 设置缩进
         this.subject.setIndent(this.parentSubject.getIndent() + 1);
         // 重置 LogContext LogLine 为当前 LogLine
-        LogContext.setLogLine(this);
-        if (!LogContext.containsParameter(param)){
-            LogContext.setParameterLogLine(param, this);
+        logMe.getLogContext().setLogLine(this);
+        if (!logMe.getLogContext().containsParameter(param)){
+            logMe.getLogContext().setParameterLogLine(param, this);
         }else{
             // 重置 Subject indent
-            LogLine parameterLogLine = LogContext.getParameterLogLine(param);
+            LogLine parameterLogLine = logMe.getLogContext().getParameterLogLine(param);
             int indent = parameterLogLine.getSubject().getIndent();
             this.subject.setIndent(indent);
         }
