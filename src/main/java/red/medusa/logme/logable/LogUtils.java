@@ -32,9 +32,9 @@ public class LogUtils {
                 String r = Arrays.toString((Object[]) argArgs);
                 ConsoleStr[] kv = null;
                 if (colour != null) {
-                    kv = colour.apply(new String[]{typeVarArgArg.trim(), r});
+                    kv = colour.apply(new String[]{String.join("...",typeVarArr), r});
                 }
-                sb.append(kv != null ? kv[0] : typeVarArgArg.trim())
+                sb.append(kv != null ? kv[0] : String.join("...",typeVarArr))
                         .append(":")
                         .append(kv != null ? kv[1] : r);
             } else {
@@ -44,9 +44,9 @@ public class LogUtils {
                 }
                 ConsoleStr[] kv = null;
                 if (colour != null) {
-                    kv = colour.apply(new String[]{typeVarArr[1].trim(), String.valueOf(param)});
+                    kv = colour.apply(new String[]{String.join(" ",typeVarArr), String.valueOf(param)});
                 }
-                sb.append(kv != null ? kv[0] : typeVarArr[1].trim())
+                sb.append(kv != null ? kv[0] : String.join(" ",typeVarArr))
                         .append(":")
                         .append(kv != null ? kv[1] : param);
             }
@@ -74,7 +74,19 @@ public class LogUtils {
         return m(constructorInfo, argArgs, kv -> new ConsoleStr[]{C.purple(kv[0]).bold(), C.brightBlue(kv[1])}, params);
     }
 
+    public static void main(String[] args) {
+        // System.out.println(m("main(String[] args)", "hello", "world"));
+        System.out.println(mArgArg("main(String[] ...args)", new Object[]{"hello", "world"}));
+        System.out.println(mArgArg("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
+        System.out.println(mArgArg("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
+        System.out.println(mPretty("main(String[] args)", "hello", "world"));
+        System.out.println(mArgArgPretty("main(String[] ...args)", new Object[]{"hello", "world"}));
+        System.out.println(mArgArgPretty("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
+        System.out.println(mArgArgPretty("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
+        System.out.println(Arrays.toString("String[] ... args ".split("([\\.]{3}\\s*(?=\\w))|\\s+(?=\\w)")));
 
+        System.out.println(mPretty("map(Function mapper)",  "Hello"));
+    }
 }
 
 
