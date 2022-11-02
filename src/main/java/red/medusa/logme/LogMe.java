@@ -44,9 +44,9 @@ public class LogMe extends SubjectFactory {
             }
             sb.append(args[i]);
         }
-        if (segmentIndex[segmentIndex.length - 1] < msg.length() - 1) {
-            sb.append(msg, segmentIndex[segmentIndex.length - 1] + 2, msg.length())
-                    .append(args[args.length - 1]);
+
+        if (segmentIndex[segmentIndex.length - 1] <= msg.length() - 2) {
+            sb.append(msg, segmentIndex[segmentIndex.length - 1] + 2, msg.length());
         } else {
             sb.append(args[args.length - 1]);
         }
