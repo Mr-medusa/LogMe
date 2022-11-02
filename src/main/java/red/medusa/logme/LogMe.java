@@ -27,7 +27,7 @@ public class LogMe extends SubjectFactory {
 
     public synchronized LogLine i2(String msg, Object... args) {
         if (args == null || args.length == 0) {
-            return this.i(msg);
+            return this.i(msg, 3);
         }
         StringBuilder sb = new StringBuilder();
         int[] segmentIndex = new int[args.length];
@@ -50,7 +50,7 @@ public class LogMe extends SubjectFactory {
         } else {
             sb.append(args[args.length - 1]);
         }
-        return this.i(sb.toString());
+        return this.i(sb.toString(), 3);
     }
 
     /**
@@ -70,6 +70,20 @@ public class LogMe extends SubjectFactory {
             subject = logLine.getSubject();
         }
         return i(subject, msg, 2, null, params);
+    }
+
+    public synchronized LogLine i(Object msg, Integer intent, boolean... params) {
+        Subject subject;
+        LogLine logLine = this.getLogContext().getLogLine();
+        if (logLine == null) {
+            subject = LOGME_DEFAULT_SUBJECT_MAP.get(this);
+            if (subject == null) {
+                throw new IllegalArgumentException("Subject was initiated");
+            }
+        } else {
+            subject = logLine.getSubject();
+        }
+        return i(subject, msg, intent, null, params);
     }
 
     public synchronized LogLine i(Subject subject, Object msg, boolean... params) {
