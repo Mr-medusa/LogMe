@@ -2,6 +2,7 @@ package red.medusa.logme;
 
 import red.medusa.logme.format.LogFormat;
 import red.medusa.logme.logable.LogContext;
+import red.medusa.logme.logable.LogLine;
 import red.medusa.logme.logable.Subject;
 
 import java.text.SimpleDateFormat;
@@ -98,5 +99,13 @@ public abstract class SubjectFactory extends Configuration {
 
     public LogContext getLogContext() {
         return logContext;
+    }
+
+    public LogLine back(){
+        return this.logContext.getLogLine().back();
+    }
+
+    public LogLine back(int n){
+        return this.logContext.getLogLine().back(n);
     }
 }
