@@ -26,12 +26,15 @@ public class LogUtils {
         String substring = constructorInfo.substring(start + 1, end);
         String[] split = substring.split(",");
         StringBuilder sb = new StringBuilder();
+
         sb.append(constructorInfo, 0, start + 1);
         for (int i = 0; i < split.length; i++) {
             String typeVar = split[i];
             String[] typeVarArr = typeVar.split(PATTERN_V2);
-            if(typeVarArr.length == 3){
-                typeVarArr = new String[]{C.green(typeVarArr[0])+" "+typeVarArr[1],typeVarArr[2]};
+            if (typeVarArr.length == 3) {
+                typeVarArr = new String[]{C.green(typeVarArr[0]) + " " + typeVarArr[1], typeVarArr[2]};
+            }else if(typeVarArr.length > 3){
+                throw new IllegalArgumentException("暂不支持这样的参数："+Arrays.toString(typeVarArr));
             }
             if (argArgs != null && typeVar.contains("...")) {
                 String r = Arrays.toString((Object[]) argArgs);
@@ -60,6 +63,10 @@ public class LogUtils {
             }
         }
         sb.append(constructorInfo, end, constructorInfo.length());
+
+        if (sb.indexOf("new") != -1 && sb.indexOf("new") == 0) {
+            sb.replace(0, 3, C.text("new").color(new ConsoleStr.RGB(230, 115, 0)).toString());
+        }
         return sb;
     }
 
@@ -72,7 +79,21 @@ public class LogUtils {
     }
 
     public static Object mPretty(String constructorInfo, Object... params) {
-        return m(constructorInfo, null, kv -> new ConsoleStr[]{C.purple(kv[0]).bold(), C.brightBlue(kv[1])}, params);
+        return m(constructorInfo, null, kv ->
+        {
+            // Pattern compile = Pattern.compile("(@\\w)");
+            // Matcher matcher = compile.matcher(kv[0]);
+            // if(matcher.find()){
+            //     String group = matcher.group(1);
+            //     System.out.println(group);
+            // }
+
+            // kv[0] = kv[0].replaceAll("(@\\w)",C.green("\\1") + " ");
+
+              return  new ConsoleStr[]{
+                C.purple(kv[0]).bold(), C.brightBlue(kv[1])};
+
+        },params);
     }
 
     public static Object mArgArgPretty(String constructorInfo, Object argArgs, Object... params) {
@@ -80,17 +101,17 @@ public class LogUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(m("main(@Null String[] args)", "hello", "world"));
-        System.out.println(mArgArg("main(@Null String[] ...args)", new Object[]{"hello", "world"}));
-        System.out.println(mArgArg("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
-        System.out.println(mArgArg("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
-        System.out.println(mPretty("main(String[] args)", "hello", "world"));
-        System.out.println(mArgArgPretty("main(String[] ...args)", new Object[]{"hello", "world"}));
-        System.out.println(mArgArgPretty("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
-        System.out.println(mArgArgPretty("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
+        // System.out.println(m("main(@Null String[] args)", "hello", "world"));
+        // System.out.println(mArgArg("main(@Null String[] ...args)", new Object[]{"hello", "world"}));
+        // System.out.println(mArgArg("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
+        // System.out.println(mArgArg("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
+        // System.out.println(mPretty("main(String[] args)", "hello", "world"));
+        // System.out.println(mArgArgPretty("main(String[] ...args)", new Object[]{"hello", "world"}));
+        // System.out.println(mArgArgPretty("main(String a,String[] ...args)", new Object[]{"hello", "world"}, "AAA"));
+        // System.out.println(mArgArgPretty("main(String a,String b,String[] ...args)", new Object[]{"hello", "world"}, "AAA", 123));
         // System.out.println(Arrays.toString("(SingleObserver<? super T> observer)".split("([\\.]{3}\\s*(?=\\w))|(?<=<.{1,100}>)|(?>=(<.+>)?)\\s+(?=\\w)")));
-        System.out.println(Arrays.toString("(SingleObserver<? super T> observer)".split("(?>=(<.+>)?)\\s+(?=\\w)")));
-        System.out.println(mPretty("new (@Null SingleObserver<? super T> observer)", "Hello"));
+        // System.out.println(Arrays.toString("(SingleObserver<? super T> observer)".split("(?>=(<.+>)?)\\s+(?=\\w)")));
+        System.out.println(mPretty("new (SingleObserver<? super T> observer)", "Hello"));
         System.out.println(mPretty("new (@Null SingleObserver observer)", null));
     }
 }

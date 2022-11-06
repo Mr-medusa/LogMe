@@ -669,19 +669,19 @@ public class LogMe extends SubjectFactory {
 
     // --- extensions
     public synchronized LogLine mPretty(String msg, Object... args) {
-        return this.i(LogUtils.mPretty(msg, args));
+        return this.i(LogUtils.mPretty(msg, args),3);
     }
 
     public synchronized LogLine m(String msg, Object... args) {
-        return this.i(LogUtils.m(msg, args));
+        return this.i(LogUtils.m(msg, args),3);
     }
 
     public synchronized LogLine mArgArg(String msg, Object[] argAgs, Object... params) {
-        return this.i(LogUtils.mArgArg(msg, argAgs, params));
+        return this.i(LogUtils.mArgArg(msg, argAgs, params),3);
     }
 
     public synchronized LogLine mArgArgPretty(String msg, Object[] argAgs, Object... params) {
-        return this.i(LogUtils.mArgArgPretty(msg, argAgs, params));
+        return this.i(LogUtils.mArgArgPretty(msg, argAgs, params),3);
     }
 }
 

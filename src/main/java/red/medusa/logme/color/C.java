@@ -8,6 +8,10 @@ package red.medusa.logme.color;
  * @date 2022/10/25
  */
 public class C {
+    public static ConsoleStr text(Object text){
+        return new ConsoleStr(text.toString());
+    }
+
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
     // +                        foreground color                                  -+-
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
