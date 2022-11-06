@@ -666,6 +666,23 @@ public class LogMe extends SubjectFactory {
     public int getSubjectId() {
         return this.subjectId++;
     }
+
+    // --- extensions
+    public synchronized LogLine mPretty(String msg, Object... args) {
+        return this.i(LogUtils.mPretty(msg, args));
+    }
+
+    public synchronized LogLine m(String msg, Object... args) {
+        return this.i(LogUtils.m(msg, args));
+    }
+
+    public synchronized LogLine mArgArg(String msg, Object[] argAgs, Object... params) {
+        return this.i(LogUtils.mArgArg(msg, argAgs, params));
+    }
+
+    public synchronized LogLine mArgArgPretty(String msg, Object[] argAgs, Object... params) {
+        return this.i(LogUtils.mArgArgPretty(msg, argAgs, params));
+    }
 }
 
 
