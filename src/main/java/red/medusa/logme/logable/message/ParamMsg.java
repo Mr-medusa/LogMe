@@ -1,5 +1,6 @@
 package red.medusa.logme.logable.message;
 
+import red.medusa.logme.LogMe;
 import red.medusa.logme.color.ConsoleStr;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
  * @date 2022/6/13
  */
 public class ParamMsg {
+    private LogMe logMe;
     private Object param;
     private String msg;
     private boolean needMatch;
@@ -20,7 +22,9 @@ public class ParamMsg {
     private Function<ConsoleStr,ConsoleStr> highlightFun;
 
     public ParamMsg append(Object param,String msg, boolean needMatch) {
-        canMatchedParamMsg.add(new ParamMsg(param, msg,needMatch));
+        ParamMsg paramMsg = new ParamMsg(param, msg, needMatch);
+        paramMsg.setLogMe(this.logMe);
+        canMatchedParamMsg.add(paramMsg);
         return this;
     }
 
@@ -87,6 +91,13 @@ public class ParamMsg {
     }
 
 
+    public LogMe getLogMe() {
+        return logMe;
+    }
+
+    public void setLogMe(LogMe logMe) {
+        this.logMe = logMe;
+    }
 }
 
 

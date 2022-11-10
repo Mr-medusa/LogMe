@@ -2,7 +2,6 @@ package red.medusa.logme.format;
 
 import red.medusa.logme.LogMe;
 import red.medusa.logme.color.ConsoleStr;
-import red.medusa.logme.logable.LogContext;
 import red.medusa.logme.logable.LogThreadHolder;
 import red.medusa.logme.logable.message.ParamMsg;
 
@@ -100,9 +99,8 @@ public abstract class AbstractLogFormat implements LogFormat {
         StringBuilder sb = new StringBuilder();
         for (ParamMsg msg : canMatchedParamMsg) {
             if (msg.isNeedMatch()) {
-                ConsoleStr.RGB rgb = (ConsoleStr.RGB) LogContext.getParameterContextMap()
+                ConsoleStr.RGB rgb = (ConsoleStr.RGB) msg.getLogMe().getParameterContextMap()
                         .computeIfAbsent(msg.getParam(), (key) -> LogMe.randomColor());
-
                 ConsoleStr consoleStr = new ConsoleStr(msg.getMsg()).color(rgb);
                 if(msg.getHighlight() != null){
                     consoleStr = msg.getHighlight().apply(consoleStr);

@@ -15,7 +15,6 @@ public class Subject {
     private LogMe logMe;
     private int indent = 0;
     private final String name;
-    private final String date;
     private final ConsoleStr.RGB color = Configuration.MSG_COLOR != null ? Configuration.MSG_COLOR : LogMe.randomColor();
 
     private final List<Logable> logLines = new LinkedList<>();
@@ -23,11 +22,7 @@ public class Subject {
     private final Thread thread = Thread.currentThread();
 
     public Subject(String name) {
-        this(name,null);
-    }
-    public Subject(String name, String date) {
         this.name = name;
-        this.date = date;
     }
 
     public String getName() {
@@ -64,20 +59,6 @@ public class Subject {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Subject that = (Subject) o;
-        return name.equals(that.name) &&
-                date.equals(that.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, date);
-    }
-
-    @Override
     public String toString() {
         return name;
     }
@@ -100,5 +81,18 @@ public class Subject {
         public static int generator() {
             return counter++;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Subject)) return false;
+        Subject subject = (Subject) o;
+        return name.equals(subject.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

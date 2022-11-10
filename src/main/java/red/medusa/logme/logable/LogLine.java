@@ -8,7 +8,7 @@ import red.medusa.logme.LogMe;
  * @author Mr.Medusa
  * @date 2022/6/10
  */
-public class LogLine implements Logable {
+public class LogLine implements Logable,Cloneable {
     private LogLine parentLogLine;
     private Subject parentSubject;
     private Subject subject;
@@ -26,7 +26,6 @@ public class LogLine implements Logable {
      * 到后续新增的 Log 都会属于当前 Subject 的子节点
      *
      * @param name 显示指定 Subject 名字,如果不存在则自动生成: 父Subject名字加-加自增计数
-     * @see LogMe#i(Subject, String, int,boolean...)      return new LogLine(subject,this);
      */
     public synchronized Subject prepareChildren(String... name) {
         // 加入到父 Subject 的 children 列表
@@ -37,18 +36,18 @@ public class LogLine implements Logable {
         // 设置缩进
         this.subject.setIndent(this.parentSubject.getIndent() + 1);
         // 重置 LogContext LogLine 为当前 LogLine
-        this.parentLogLine = logMe.getLogContext().getLogLine();
-        logMe.getLogContext().setLogLine(this);
+        this.parentLogLine = logMe.getLogLine();
+        logMe.setLogLine(this);
         return subject;
     }
 
     public synchronized LogLine back(){
-        if(logMe.getLogContext().getLogLine() == null || logMe.getLogContext().getLogLine().getParentLogLine() == null){
-            logMe.getLogContext().setLogLine(null);
+        if(logMe.getLogLine() == null || logMe.getLogLine().getParentLogLine() == null){
+            logMe.setLogLine(null);
             return this;
         }
-        LogLine parentLogLine = logMe.getLogContext().getLogLine().getParentLogLine();
-        logMe.getLogContext().setLogLine(parentLogLine);
+        LogLine parentLogLine = logMe.getLogLine().getParentLogLine();
+        logMe.setLogLine(parentLogLine);
         return parentLogLine != null ? parentLogLine : this;
     }
 
@@ -70,12 +69,12 @@ public class LogLine implements Logable {
         // 设置缩进
         this.subject.setIndent(this.parentSubject.getIndent() + 1);
         // 重置 LogContext LogLine 为当前 LogLine
-        logMe.getLogContext().setLogLine(this);
-        if (!logMe.getLogContext().containsParameter(param)){
-            logMe.getLogContext().setParameterLogLine(param, this);
+        logMe.setLogLine(this);
+        if (!logMe.containsParameter(param)){
+            logMe.setParameterLogLine(param, this);
         }else{
             // 重置 Subject indent
-            LogLine parameterLogLine = logMe.getLogContext().getParameterLogLine(param);
+            LogLine parameterLogLine = logMe.getParameterLogLine(param);
             int indent = parameterLogLine.getSubject().getIndent();
             this.subject.setIndent(indent);
         }
@@ -112,4 +111,9 @@ public class LogLine implements Logable {
     public void setParentLogLine(LogLine parentLogLine) {
         this.parentLogLine = parentLogLine;
     }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
 }
+

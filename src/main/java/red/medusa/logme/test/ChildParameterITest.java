@@ -1,5 +1,7 @@
-package red.medusa.logme;
+package red.medusa.logme.test;
 
+import red.medusa.logme.LogMe;
+import red.medusa.logme.SubjectFactory;
 import red.medusa.logme.color.ConsoleStr;
 import red.medusa.logme.format.PlainLogFormat;
 import red.medusa.logme.format.PrettyLogFormat;
@@ -10,7 +12,7 @@ import red.medusa.logme.logable.message.ParamMsg;
  * @author huguanghui
  * @date 2022/6/12
  */
-public class TraceTest {
+public class ChildParameterITest {
     static LogMe logMe = SubjectFactory.getLogMe(LogMeTest.class);
     static LogMe hello = LogMe.getLogMe("Hello");
     public static void main(String[] args) {
