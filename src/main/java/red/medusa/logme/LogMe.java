@@ -256,7 +256,7 @@ public class LogMe extends SubjectFactory {
         return sb.toString();
     }
 
-    public synchronized LogLine i3(String lineSubjectName, String msg) {
+    public synchronized LogLine i3(String lineSubjectName, Object msg) {
         StackTraceElement stackTraceElement = new Throwable().getStackTrace()[1];
         String trace = stackTraceElement.getFileName()+stackTraceElement.getClassName()+stackTraceElement.getMethodName();
         Map<String, Subject> cacheSubjectMap = LOG_ME_FOR_SUBJECT_MAP.get(this);
