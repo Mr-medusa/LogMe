@@ -224,11 +224,11 @@ public class LogMe extends SubjectFactory {
     }
 
     // --- enhanced
-    public synchronized LogLine i2(String msg, Object... args) {
+    public synchronized LogLine i2(Object msg, Object... args) {
         if (args == null || args.length == 0) {
             return this.i(msg, 3);
         }
-        return this.i(interpolation(msg,args), 3);
+        return this.i(interpolation(msg.toString(),args), 3);
     }
 
     public static String interpolation(String msg, Object... args){
